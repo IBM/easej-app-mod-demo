@@ -174,10 +174,6 @@ For this step, we will start with the source for the applications which you disc
 
 This section will provide guidance on the usage of the features of watsonx Code Assistant for Enterprise Java Applications.
 
-### WebSphere Application Server modernization to Liberty with watsonx Code Assistant for Enterprise Java Applications Eclipse IDE plugin
-
-First, let’s start with **Eclipse IDE**. Locate and launch the Eclipse IDE from the Activities task bar.
-
 1. After launching Eclipse, import the ModResorts app as a Maven project by going to the
     **File** drop-down menu in the top left corner, then selecting
     **Import -\> Maven -\> Existing Maven Projects**.
