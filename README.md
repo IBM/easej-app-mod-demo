@@ -4,15 +4,10 @@ Modernization is essential to preserve the security and stability of your critic
 1. Enterprise Application Service for Java. This is a new managed service which provides an end-to-end application delivery experience, including DevOps, GitOps, build & delivery pipelines, running applications, and observability integration. Being a fully managed service, it insulates you from the infrastructure complexities so you can focus on delivering the code.
 2. Application Modernization Accelerator. This tool enables you to discover existing enterprise applications and their database and messaging dependencies.  Assess the complexity of migration, plan a migration and then assist the migration (including database and messaging) through curated instructions, artefact generation and code rewrite rules.
 
-In this lab you will use Application Modernization Accelerator to create a migration plan that includes automatically generated configuration files and scripts, guidance and pointers to tools that are needed to accelerate and complete the migration. 
- 
-This migration plan will include: 
-- Details for the MQ administrator to configure the on-premises MQ network
-- Details for the Db2 administrator to transfer the data from the on-premises database to the new Db2 SaaS
-- Generated Liberty configuration files required to migrate the application
+In this lab you will use Application Modernization Accelerator to create a migration plan that includes automatically generated configuration files and scripts, guidance and pointers to tools that are needed to accelerate and complete the migration. This migration plan will include generated Liberty configuration files required to migrate the application.
 
-Application Modernization Accelerator can then automatically provision, configure and wire together the Enterprise Application Service, MQ and Db2 SaaS services to support the application running in the cloud.
- 
+Application Modernization Accelerator can then automatically provision and configure the Enterprise Application Service to support the application running in the cloud.
+
 During the code remediation process, you will have the opportunity to utilize the services of **watsonx Code Assistant for Enterprise Java Applications** (WCA4EJA) to assist with code explanation, code completion, test generation, and also consume the output of Application Modernization Accelerator to convert the application from WebSphere to Enterprise Application Service.
  
 The generated files are then brought into GitHub where Enterprise Application Service will build the application. Deterministic changes to the application source code can be fixed automatically using pre-defined rules. Other fixes are facilitated through Generative AI where you can interact in a guided manner with a Java-trained LLM and generated code can be added to the application source.
@@ -25,9 +20,9 @@ Enterprise Application Service has a built-in CI/CD workflow for delivering appl
 
 # Steps:
 
-## 1. Discovering applications and planning your migration
+## Step 1: Discovering applications and planning your migration
 
-Launch Application Modernization Accelerator (AMA) using the url **http://10.100.1.10:3000**:
+Launch Application Modernization Accelerator (AMA) using the url **https://10.100.1.10**:
 
 ![ama-home-page](images/ama-home-page.png)
 
@@ -41,11 +36,11 @@ The discovery tool can be executed on any system that you want analyzed. It will
 
 The result of the discovery is then automatically uploaded into Application Modernization Accelerator as a **Workspace**.
 
-For the convenience of this lab, we have already run the discovery tool, and the results are stored in the **SampleData** workspace.
+For the convenience of this lab, we have already run the discovery tool, and the results are stored in the **DemoData** workspace.
 
 ### Explore the Discovery tool results
 
-From the main AMA panel, click on the workspace labelled **SampleData**. This will display a topology map from the **Visualization** tab.
+From the main AMA panel, click on the workspace labelled **DemoData**. This will display a topology map from the **Visualization** tab.
 
 ![ama-discovered-estate](images/ama-discovered-estate.png)
 
@@ -93,16 +88,16 @@ Click on the **Assessment** tab:
 
 Note that the **Enterprise Application Service** is automatically selected as the **Target destination**. This is the IBM Enterprise Application Service for Java managed service where we wish to build and deploy the application.
 
-As you can see, the overall total development cost for the whole workload is 21 days.
+As you can see, the overall total development cost for the whole workload is 22 days.
 
 Now let's focus on the ModResorts application. Scroll down and enter **modresorts** in the search bar to show the **ModResorts.ear** application:
 
 ![ama-modresorts-assess](images/ama-modresorts-assess.png)
 
-Additionally, you see:
-- this application has **Moderate** complexity, which means that code changes are required for ModResorts to work on Enterprise Application Service.
-- there are 2 **Critical** issues and 5 **Information** issues. If you mouse over the issues you will see that Critical issues must be addressed, and Information issues are relevant in testing.
-- the **Required code changes** column shows that we have an **Automated** way to resolve all the issues in the application.
+Additionally, you will see:  
+- The application has a **Moderate** complexity rating, indicating that code changes are required for ModResorts to run on Enterprise Application Service.  
+- There are **4 Critical** issues and **5 Information** issues. Hovering over the issues reveals that Critical issues must be resolved, while Information issues are relevant for testing.  
+- The **Code Changes** column indicates that there is a **Part-Automated** method available to address the application's issues.
 
 Now click on the **ModResorts.ear** link to see the applications details page:
 
@@ -116,16 +111,15 @@ Scroll down to the **Required code changes** section. Here you will see the buil
 
 Scroll down to the **Issues** section to see what the automated code changes will resolve.
 
-Open the technology issues accordion to see the two Critical issues. Expand them to review the help – but remember these can be resolved automatically by executing the configuration changes provided. [**NOTE** You will do this later in the lab using IBM watsonx code assistant].
+Open the technology issues accordion to see the 4 Critical issues. Expand them to review the help – but remember these can be resolved automatically by executing the configuration changes provided. [**NOTE** You will do this later in the lab using IBM watsonx code assistant].
 
 ![ama-issues-expanded](images/ama-issues-expanded.png)
 
 ### Generating the migration plan
 
-Now that we have reviewed all the details of the ModResorts application, it still looks like a good candidate for modernizing to the Cloud. Reasons include:
-- all code changes can be automated.
-- all dependencies (database and message queue) are not shared with 
-other applications.
+After reviewing all the details of the ModResorts application, it still appears to be a good candidate for modernizing to the Cloud. Key reasons include:  
+- Code changes can be partially automated.  
+- There are no dependencies associated with the application.
 
 To start the migration, click the **View migration plan** button at the top of the panel.
 
@@ -147,9 +141,9 @@ At the top left side of the panel, click the **Dependency endpoints** button:
 
 This panel shows all the dependencies that are part of this migration plan. If you do not want to modernize any of the dependencies, or if they are no longer relevant, you can remove them from the plan by deselecting them.
 
-For this lab we will be modernizing all of the dependencies.
+For this lab, there are no dependencies associated with the application.  
 
-[Click on **Start in IBM Cloud**. Upon completion, it will create a Cloud project and stand up and configure service instances for the application, databases and message queues defined in the migration plan. From there you can customize the instances to suit your needs.]
+[Clicking the **Start in IBM Cloud** button creates a Cloud project, provisions service instances, and configures databases and message queues as outlined in the migration plan. From there you can customize the instances to suit your needs. However, this step will be skipped in this lab.]
 
 At the top right side of the panel, click the **Download plan** button. This will result in a zip file being downloaded to your local system.
 
@@ -157,147 +151,196 @@ At the top right side of the panel, click the **Download plan** button. This wil
 
 You can explode this zip file bundle to see all the artifacts that AMA provides, including a **README** file that gives you step by step instructions on how to use the bundle. You will use this bundle in the next section of the lab.
 
-## 2. Updating the application to run on Enterprise Application Service for Java
+## Step 2: Modernizing the application to run on Enterprise Application Service for Java with watsonx Code Assistant
 
-For this step, we will start with the source for the applications which you discovered, assessed and planned in step 1.
+Now, you'll update the ModResorts application from WebSphere Application Server to Liberty using **watsonx Code Assistant for Enterprise Java Applications**.
 
-### Clone the ModResorts GitHub repo
+Originally, the application was developed using **traditional WebSphere Application Server** code. With **watsonx Code Assistant for Enterprise Java Applications**, you can leverage an AI-powered feature to modernize the application to the latest **WebSphere Liberty Server**.
 
-1. In a terminal, clone the ModResorts application.
+### Cloning the ModResorts GitHub repository
+
+In a terminal, clone the ModResorts repository from GitHub:
    
-    ```bash
-    cd /home/admin
-    git clone https://github.com/techxchange2024/mod-resorts.git
-    ```
+```bash
+cd /home/admin
+git clone https://github.com/IBM/sample-app-mod.git
+cd sample-app-mod
+```
 
-## Experiencing watsonx Code Assistant for Enterprise Java Applications
+### Opening the project in VS Code
 
-This section will provide guidance on the usage of the features of watsonx Code Assistant for Enterprise Java Applications.
+- Launch the **VS Code IDE** from your system.
 
-1. After launching Eclipse, import the ModResorts app as a Maven project by going to the
-    **File** drop-down menu in the top left corner, then selecting
-    **Import -\> Maven -\> Existing Maven Projects**.
+- Navigate to **File** > **Open Folder...**, then select the `sample-app-mod` folder from your local directory. 
+   
+   When the project opens, ensure the **Welcome view** remains open. This allows the **watsonx Code Assitant** features to open in a new pane beside your editor for seamless coding.
 
-2. Please note that to access watsonx Code Assistant for Enterprise Java Applications, you will need to log in using the API key from IBM Cloud. Your instructor will provide you with the necessary API key. In Eclipse IDE, you can find the watsonx Code Assistant for Enterprise Java Applications tab in the top panel of the interface.
+### Logging into watsonx Code Assistant
+
+To access **watsonx Code Assistant for Enterprise Java Applications**, you need to log in using an **IBM watsonx Code Assistant API key**. 
+
+- Click the **watsonx Code Assistant** icon ![watsonx Code Assistant icon](./images/wca-vsc-icon.svg) in the IDE's side panel, then enter your API key. 
+
+- Once logged in, a greeting message will appear in the chat panel.
+
+   ![wca-vsc-chat-greeting-message](images/wca-vsc-chat-greeting-message.png)
+
+### Starting the modernization process
+
+- In the **Explorer** pane, right-click on either an empty area within the project folder or any file in the project. From the context menu,  select **watsonx Code Assistant** → **Modernize to Liberty**.
+
+  ![wca-vsc-modernize-to-liberty](images/wca-vsc-modernize-to-liberty.png)
+
+- The **Modernize to Liberty** interface will open.
+
+### Selecting a modernization method
+
+The tool offers two methods for modernizing your application:
+
+1. **Using a migration bundle:**
+
+   Use an [IBM Cloud® Transformation Advisor](https://www.ibm.com/docs/en/cta?topic=about-transformation-advisor) migration bundle to modernize your application. The migration bundle includes a list of modernization issues that need to be addressed and contains automatically generated configuration information to help the application function properly in Liberty. This is the recommended approach, as the bundle captures important configuration details from the environment where the Java application was running.
+
+2. **Analyzing the application:** 
+  
+   If a migration bundle is not available, you can analyze your application directly. This analysis provides a list of issues to address but does not include configuration information because the application server environment isn’t analyzed. For complete modernization, a Transformation Advisor migration bundle is required to assess the application server environment.
+
+In this lab, you will use the migration bundle option.
+
+- On the **Modernize ModResorts** page, click **Upload migration bundle**.
+  
+  ![wca-vsc-migration-bundle](images/wca-vsc-migration-bundle.png)
+
+- Locate and select the `modresorts.ear_migrationBundle.zip` file from the `migration-bundle` folder in the project directory. The file path is [`sample-app-mod-v1\migration-bundle\modresorts.ear_migrationBundle.zip`](https://github.com/IBM/sample-app-mod/blob/main/migration-bundle/modresorts.ear_migrationBundle.zip).
+
+- Click **Open** to upload the bundle.
+
+### Extracting configuration files
+
+Once the migration bundle is uploaded, watsonx Code Assistant for Enterprise Java Applications will extract the following key configuration files:
+
+- `server.xml`: Defines the application's configuration.
+
+- `Containerfile`: Can be used to build a Liberty image.
+
+Review the extracted files, then check the selection box and click **Proceed** to add them to the project.
+
+<div align="center">
+  <img src="./images/wca-vsc-modernization-configuation-files.png" width="500">
+</div>
+
+### Reviewing and auto-fixing detected issues
+
+Once the **Modernize ModResorts** page opens, it will display issues detected by watsonx Code Assistant for Enterprise Java Applications. These issues may require automated fixes, assisted fixes, or manual adjustments. Additionally, the **Additional information** tab highlights issues you should be aware of when migrating your application, though these do not require code changes.
+
+To resolve issues that can be fixed automatically:
+
+- Navigate to the **Automated fixes** tab.
+
+- Click the **Run automated fixes** button.
+
+  <div align="center">
+    <img src="./images/wca-vsc-auto-fixex.png" width="500">
+  </div>
+
+> **NOTE**: If the **Back to top** button blocks your view, you can drag it to a different spot on the screen.
+
+### Resolving assisted fixes
+
+Assisted fixes are issues where watsonx Code Assistant for Enterprise Java Applications provides guidance and code suggestions to help you resolve them.
+
+- Open the **Assisted fixes** tab.
+
+  <div align="center">
+    <img src="./images/wca-vsc-assisted-fixes-tab.png" width="500">
+  </div>
+
+- Expand each issue to view its details.
+  <div align="center">
+    <img src="./images/wca-vsc-issue-expand.png" width="500">
+  </div>
+
+- Use the caret icon next to the file name to reveal step-by-step instructions for resolving the issue.
+
+  <div align="center">
+    <img src="./images/wca-vsc-file-caret-icon.png" width="500">
+  </div>
+
+- watsonx Code Assistant for Enterprise Java Applications will outline the steps to fix the issue. Carefully review these steps and click the file name to open it in the editor.
+
+  <div align="center">
+    <img src="./images/wca-vsc-issue-details.png" width="500">
+  </div>
+
+**Resolving the issue "The WebSphere Servlet API was superseded by a newer implementation"**
+
+ - Navigate to the file `src/main/java/com/acme/modres/UpperServlet.java` as indicated in the issue details.
+
+- Highlight the `doGet()` method (lines 19 to 33) or the entire class as specified in the instructions.
+
+- Click the **Help me** button in the issue resolution interface.
+
+  <div align="center">
+    <img src="./assets/media/vsc-help-me.png" width="500">
+  </div>
+
+- watsonx Code Assistant will generate a suggested solution in the chat window, including updated code for the highlighted section.
+
+- Review the suggested solution. Use the copy button ![copy icon](./assets/media/copy.svg) next to the suggested code blocks to copy the code to your clipboard.
+
+  - **Handling import statements**: Depending on your code selection (e.g. selecting the `doGet` method versus selecting the entire class), the code suggestion that you get may vary. Review the code suggestion and copy the relevant code from the chat to your editor. If import statements were generated, place them at the top of the class appropriately.
 
     <div align="center">
-        <img src="./images/wca-icon.png">
+      <img src="./images/wca-modernization-assisted-fixes-import.png" width="400">
     </div>
 
-    After successfully logging into watsonx Code Assistant for Enterprise Java Applications, you should see a greeting message from watsonx Code Assistant for Enterprise Java Applications in the chat panel.
+  - **Updating build dependencies**: watsonx Code Assistant should provide a code block with additional dependency instructions. Copy this dependency block, navigate to the `pom.xml` file in your `sample-app-mod-v1` project folder, and add it within the `<dependencies>` block.
 
     <div align="center">
-        <img src="./images/wca-greeting.png">
+      <img src="./images/wca-modernization-assisted-fixes-dependency.png" width="400">
     </div>
 
-3.  To ensure that the project is properly configured with the dependencies for the WebSphere Application Server APIs, please run the following commands in a terminal window to install the required dependencies into your local Maven project.
+- Review the suggested solution and make adjustments to the code as needed.
 
-    ```bash
-    cd mod-resorts
-    mvn install:install-file -Dfile="was-dependency/was_public.jar" -DpomFile="was-dependency/was_public-9.0.0.pom"
-    ```
+  Keep in mind that these are **assisted suggestions** and may not provide a complete solution. If needed, ask follow-up questions in the chat for further clarification or guidance.
 
-4.  The application was configured and written using **traditional WebSphere Application Server** code, watsonx Code Assistant for Enterprise Java Applications supports an automated AI powered feature to modernize this application to use the latest WebSphere Liberty Server. To access this feature, right-click on the project and select **watsonx Code Assistant for Enterprise Java Applications → Modernize to Liberty**. You should see the watsonx Code Assistant for Enterprise Java Applications extension interface.
+### Verifying changes
 
-    <div align="center">
-        <img src="./images/wca-modernize.png">
-    </div>
+- After applying the changes, save the file.
 
-    > **NOTE**: Please wait for the console message `Retrieving the analysis report completed` before proceeding to the next step.
-        <div align="center">
-            <img src="./images/wca-report-complete.png">
-        </div>
+- Click the **Rebuild and refresh** button to verify the updates.
 
-    Click on the **Modernize project: modresorts** tab.
+  <div align="center">
+    <img src="./images/wca-rebuild-refresh.png" width="500">
+  </div>
 
-    <div align="center">
-        <img src="./images/wca-modernize-tab.png">
-    </div>
+### Finalizing the migration
 
-5.  WCA has two options to migrate the project to Liberty:
-    1.  **Upload the migration bundle** exported for Application Modernization Accelerator, which will provide watsonx Code Assistant with the artefacts required to migrate the application.
-    2. Use the **binary scanner** if a migration bundle is not available. 
- 
-    Note that using the migration bundle is recommended because it has been generated with the configuration information from where the Java application is running, while the binary scanner will not be able to obtain this information. The migration bundle option will be used in this lab. Please locate and open the bundle zip file you built and downloaded using `Application Modernization Accelerator`.
+You can now verify that the migration process is complete by following these steps:
 
-    <div align="center">
-        <img src="./images/wca-start-modernize-msg.png">
-    </div>
+- To deploy the application on Liberty, you need to enable the [Liberty Maven plug-in](https://github.com/OpenLiberty/ci.maven) in your project. Add the Liberty Maven plug-in to the `<plugins>` section within the `<build>` block of your `pom.xml` file:
 
-    <div align="center">
-        <img src="./images/wca-start-scan.png">
-    </div>
+  ```xml
+  <plugin>
+      <groupId>io.openliberty.tools</groupId>
+      <artifactId>liberty-maven-plugin</artifactId>
+      <version>3.11.2</version>
+  </plugin>
+  ```
 
-6.  watsonx Code Assistant for Enterprise Java Applications will extract configuration files, including `server.xml` and `Containerfile`, from the migration bundle. The `server.xml` file contains the application's runtime configuration. The `Containerfile` can be used to build a container image for your applications. Enterprise Application Service only needs your application source and runtime configuration, so the `Containerfile` is not used. After reviewing these files, add them to the project folder by clicking on **Add Files to Project** to apply the changes.
+- Open a terminal in VS Code, ensure it is located at the your `sample-app-mod` project directory, and start the application in Liberty dev mode:
 
-    <div align="center">
-        <img src="./images/wca-add-files.png">
-    </div>
+  ```bash
+  mvn liberty:dev
+  ```
 
-7.  Next, a modernization issues list will be presented with the must fix issue detected by watsonx Code Assistant for Enterprise Java Applications. You can review each issue in detail by clicking on the expand button on the right-hand side of each item. The **Additional information** tab highlights other issues you should be aware of when migrating your application, though these do not require code changes. After the review is complete, click the **Run auto-fixes** button to apply the automated changes (Note, these are the same `rewrite` changes you could have applied using maven and gradle with the configuration from Application Modernization Accelerator. Applying them in WCA is easier as it doesn't require you to customize and run a build).
+  Dev mode provides an interactive development experience, allowing you to make changes to your application or configuration while automatically updating the application for immediate feedback. You can also press **Enter** to run application test cases.
 
-    <div align="center">
-        <img src="./images/wca-issues-list-sm.png">
-    </div>
+- Once the server starts, visit http://localhost:9080/resorts in your browser. You should see the application’s homepage.
 
-8.  After the auto-fix is completed, click on **Build and Refresh** to
-    refresh the list. All the listed issue should be resolved.
+- After you are finished checking out the application, stop the Liberty instance by pressing **CTRL+C** in the command-line session where you ran Liberty. 
 
-    <div align="center">
-        <img src="./images/wca-resolved-list.png">
-    </div>
-
-9.  Once migration is completed, add the Liberty maven plugin configuration in the **pom.xml** file.  This plugin makes it easy to build and test the application locally using the Liberty runtime.  This is the same runtime used in Enterprise Application Service for Java:
-
-    ```bash
-    <plugin>
-        <groupId>io.openliberty.tools</groupId>
-        <artifactId>liberty-maven-plugin</artifactId>
-        <version>3.10.3</version>
-    </plugin>
-    ```
-
-10. Additonally, add links to the Db2 and MQ drivers. First we copy the drivers by adding the following `resources` to the **pom.xml** file:
-
-    ```bash
-    <resources>
-        <resource>
-            <directory>${project.basedir}/src/main/resources</directory>
-        </resource>
-        <resource>
-            <directory>${project.basedir}/db-drivers</directory>
-            <targetPath>${project.build.directory}/liberty/wlp/usr/shared/config/lib/global</targetPath>
-            <filtering>false</filtering>
-        </resource>
-        <resource>
-            <directory>${project.basedir}/mq-drivers</directory>
-            <targetPath>${project.build.directory}/liberty/wlp/usr/shared/config/lib/global</targetPath>
-            <filtering>false</filtering>
-        </resource>
-    </resources>
-    ```
-
-    And then we reference the drivers by updating their location in the **server.xml** file:
-
-    ```bash
-    <library>
-        <file name="{shared.config.dir}/lib/global/db2jcc.jar"/>
-        <file name="{shared.config.dir}/lib/global/db2jcc_license_cu.jar"/>
-        <file name="{shared.config.dir}/lib/global/db2jcc_license_cisuz.jar"/>
-    </library>
-
-    <resourceAdapter id="mqJmsRa" location="${shared.config.dir}/lib/global/wmq.jmsra.rar">
-    ```
-
-11. Run the application in Liberty Dev Mode in the same terminal used in step 3. Dev Mode is an interactive developer experience where you can make changes to your application or configuration and Dev Mode automatically updates the application to give you immediate feedback. You can also press **Enter** to run application test cases. To view the running application, visit <http://localhost:9080/resorts>.
-
-    ```bash
-    mvn liberty:dev
-    ```
-
-12. After you are finished checking out the application, stop the Liberty instance by pressing **CTRL+C** in the command-line session where you ran Liberty. 
-
-## 3. Deploy application to cloud using IBM Enterprise Application Service for Java
+## Step 3: Deploy application to cloud using IBM Enterprise Application Service for Java
 
 Now that we have modernized our ModResorts application to use the Java **Liberty Runtime**, we can build and deploy it in Enterprise Application Service for Java.
 
@@ -601,3 +644,20 @@ The steps required will follow the same flow as described above.
 11. **[Service]** Click **Environments** -> **Staging** to view the staging environment.
     
 12. **[Service]** Click on **Actions** -> **Open application** to view the application. [Don't forget to add the **/resorts** context to the URL]
+
+
+---
+
+# Troubleshooting
+
+This section provides guidance on troubleshooting common issues during the lab.
+
+## Installing WebSphere Application Server dependencies
+
+The ModResorts application requires dependencies from WebSphere Application Server (WAS) APIs version 9.0.0 to build and run successfully. The required module JAR file `was_public.jar` and its associated `pom` file are provided in the `/home/admin/was-dependency` directory. These dependencies are pre-installed in the local Maven repository in the VM.
+
+If you need to reinstall them, you can run the following command:
+
+  ```bash
+  mvn install:install-file -Dfile=/home/admin/was-dependency/was_public.jar -DpomFile=/home/admin/was-dependency/was_public-9.0.0.pom
+  ```
