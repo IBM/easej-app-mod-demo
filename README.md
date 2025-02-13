@@ -1,10 +1,12 @@
 # Hands-on Modernization Lab
 
-Modernization is essential to preserve the security and stability of your critical enterprise applications, and to be able to increase the delivery of new innovations. Modernization can take many forms, including adopting a more modern runtime, adopting Kubernetes/OpenShift, and refactoring to Microservices.  Many modernization projects struggle to deliver because of the complexity inherent in uprooting an application and its dependencies, understanding code written decades ago, and acquiring new skill for the destination environment. In this lab you'll use two new preview technologies that address these challenges:
-1. Enterprise Application Service for Java. This is a new managed service which provides an end-to-end application delivery experience, including DevOps, GitOps, build & delivery pipelines, running applications, and observability integration. Being a fully managed service, it insulates you from the infrastructure complexities so you can focus on delivering the code.
-2. Application Modernization Accelerator. This tool enables you to discover existing enterprise applications and their database and messaging dependencies.  Assess the complexity of migration, plan a migration and then assist the migration (including database and messaging) through curated instructions, artefact generation and code rewrite rules.
+Modernization is essential to preserve the security and stability of your critical enterprise applications, and to be able to increase the delivery of new innovations. Modernization can take many forms, including adopting a more modern runtime, adopting Kubernetes/OpenShift, and refactoring to Microservices. Many modernization projects struggle to deliver because of the complexity inherent in uprooting an application and its dependencies, understanding code written decades ago, and acquiring new skill for the destination environment. This lab introduces you to two new technologies designed to simplify modernization:
 
-In this lab you will use Application Modernization Accelerator to create a migration plan that includes automatically generated configuration files and scripts, guidance and pointers to tools that are needed to accelerate and complete the migration. This migration plan will include generated Liberty configuration files required to migrate the application.
+1. **Enterprise Application Service for Java**: A new managed service which provides an end-to-end application delivery experience, including DevOps, GitOps, build & delivery pipelines, running applications, and observability integration. Being a fully managed service, it insulates you from the infrastructure complexities so you can focus on delivering the code.
+
+2. **Application Modernization Accelerator**: A tool that helps you discover existing enterprise applications and their database and messaging dependencies, assess migration complexity, generate migration plans, and assist the migration (including database and messaging) through curated instructions through curated instructions, artefact generation and code rewrite rules.
+
+In this lab, you will use **Application Modernization Accelerator** to create a migration plan that includes automatically generated configuration files and scripts, guidance and pointers to tools that are needed to accelerate and complete the migration. This migration plan will include generated Liberty configuration files required to migrate the application.
 
 Application Modernization Accelerator can then automatically provision and configure the Enterprise Application Service to support the application running in the cloud.
 
@@ -18,15 +20,15 @@ Enterprise Application Service has a built-in CI/CD workflow for delivering appl
 3. Releases are deployed through updates to a GitHub configuration repository.  Updating a staging environment yaml to reference the release will cause it to be deployed into a predefined Staging environment.  As with the code updates, PRs and PR merging can be used to achieve this.  Creating a PR will cause a Config validation build to run to check the configuration conforms to the deployment schema.
 4. Once happy with the application in Staging, the release can be promoted to a pre-defined Production environment by making equivalent updates to the production environment yaml.
 
-# Steps:
-
 ## Step 1: Discovering applications and planning your migration
+
+### Launching Application Modernization Accelerator
 
 Launch Application Modernization Accelerator (AMA) using the url **https://10.100.1.10**:
 
 ![ama-home-page](images/ama-home-page.png)
 
-### Discovery tool
+### Using the discovery tool
 
 A major capability of Application Modernization Accelerator is discovery. The discovery tool is downloadable from AMA and can be used on all major platforms:
 
@@ -38,118 +40,126 @@ The result of the discovery is then automatically uploaded into Application Mode
 
 For the convenience of this lab, we have already run the discovery tool, and the results are stored in the **DemoData** workspace.
 
-### Explore the Discovery tool results
+### Exploring discovery results
 
-From the main AMA panel, click on the workspace labelled **DemoData**. This will display a topology map from the **Visualization** tab.
+- From the main AMA panel, click on the workspace labelled **DemoData**. This will display a topology map from the **Visualization** tab.
 
-![ama-discovered-estate](images/ama-discovered-estate.png)
+    ![ama-discovered-estate](images/ama-discovered-estate.png)
 
-The map includes all the applications, databases and message queues, and their relationships, which were discovered from the scanned systems.
+- The map includes all the applications, databases and message queues, and their relationships, which were discovered from the scanned systems.
 
-![ama-node-types](images/ama-node-types.png)
+    <div align="center">
+    <img src="./images/ama-node-types.png" width="280">
+    </div>
 
-You also see the total number and type of each node:
+- You will see the total number and type of each node:
 
-![ama-asset-count](images/ama-asset-count.png)
+    <div align="center">
+    <img src="./images/ama-asset-count.png" width="500">
+    </div>
 
-You will also see several features to help you pan and zoom on the map.
+- You will also see several features to help you pan and zoom on the map. Clicking on a specific node will bring up more details.
 
-Clicking on a specific node will bring up more details.
+    ![ama-node-details](images/ama-node-details.png)
 
-![ama-node-details](images/ama-node-details.png)
-
-### Identify potential capabilities to modernize
+### Identifying potential capabilities to modernize
 
 Each set of connected nodes can be thought of as a **workload** that can be modernized. Let's filter our map to show the `Acme` workload.
 
-Type **acme** in the field:
+- Type **acme** in the field:
 
-![ama-acme-capability](images/ama-acme-capability.png)
+    ![ama-acme-capability](images/ama-acme-capability.png)
 
-Here you see all the nodes associated with the **Acme** workload. As you can see, this is a very complex system, with multiple applications using multiple message queues and databases. You can use the dependency information to help you to decide where to start with modernization. Further details to help with this decision are also available and will be seen later. 
+    Here you see all the nodes associated with the **Acme** workload. As you can see, this is a very complex system, with multiple applications using multiple message queues and databases. You can use the dependency information to help you to decide where to start with modernization. Further details to help with this decision are also available and will be seen later. 
 
-For the purpose of this lab, we will work on a simpler workload. This is how you would typically start a modernization project.  Starting simple helps you learn the tools and technologies.  Replace the field field with **mod**.
+For the purpose of this lab, we will work on a simpler workload. This is how you would typically start a modernization project. Starting simple helps you learn the tools and technologies.
 
-![ama-mod-capability](images/ama-mod-capability.png)
+- Replace the field with **mod**:
 
-Now you see only three nodes highlighted, which looks like a much better option to start with.
+    ![ama-mod-capability](images/ama-mod-capability.png)
 
-Click on the application node (the blue hexagon) to see more details about ModResorts:
+    Now you see only one node highlighted, which looks like a much better option to start with.
 
-![ama-modresorts-details](images/ama-modresorts-details.png)
+- Click on the application node (the blue hexagon) to see more details about ModResorts:
 
-ModResorts appears to be a good candidate for modernization. Now let's explore this application and its dependencies in more detail.
+    ![ama-modresorts-details](images/ama-modresorts-details.png)
 
-### Modernize the ModResorts application
+### Modernizing the ModResorts application
 
-Click on the **Assessment** tab:
+ModResorts appears to be a good candidate for modernization. Now let's explore this application in more detail.
 
-![ama-assessment-panel](images/ama-assessment-panel.png)
+- Click on the **Assessment** tab:
 
-Note that the **Enterprise Application Service** is automatically selected as the **Target destination**. This is the IBM Enterprise Application Service for Java managed service where we wish to build and deploy the application.
+    ![ama-assessment-panel](images/ama-assessment-panel.png)
 
-As you can see, the overall total development cost for the whole workload is 22 days.
+    Note that the **Enterprise Application Service** is automatically selected as the **Target destination**. This is the IBM Enterprise Application Service for Java managed service where we wish to build and deploy the application.
 
-Now let's focus on the ModResorts application. Scroll down and enter **modresorts** in the search bar to show the **ModResorts.ear** application:
+    As you can see, the overall total development cost for the whole workload is 22 days.
 
-![ama-modresorts-assess](images/ama-modresorts-assess.png)
+- Now let's focus on the ModResorts application. Scroll down and enter **modresorts** in the search bar to show the **ModResorts.ear** application:
 
-Additionally, you will see:  
-- The application has a **Moderate** complexity rating, indicating that code changes are required for ModResorts to run on Enterprise Application Service.  
-- There are **4 Critical** issues and **5 Information** issues. Hovering over the issues reveals that Critical issues must be resolved, while Information issues are relevant for testing.  
-- The **Code Changes** column indicates that there is a **Part-Automated** method available to address the application's issues.
+    ![ama-modresorts-assess](images/ama-modresorts-assess.png)
 
-Now click on the **ModResorts.ear** link to see the applications details page:
+    Additionally, you will see:  
+    - The application has a **Moderate** complexity rating, indicating that code changes are required for ModResorts to run on Enterprise Application Service.  
+    - There are **4 Critical** issues and **5 Information** issues. Hovering over the issues reveals that Critical issues must be resolved, while Information issues are relevant for testing.  
+    - The **Code Changes** column indicates that there is a **Part-Automated** method available to address the application's issues.
 
-![ama-modresorts-ear-details](images/ama-modresorts-ear-details.png)
+- Now click on the **ModResorts.ear** link to see the applications details page:
 
-This panel contains all the detailed information about this application. 
+    ![ama-modresorts-ear-details](images/ama-modresorts-ear-details.png)
 
-Scroll down to the **Required code changes** section. Here you will see the build configuration you can use in a maven or gradle build to execute the rewrite rules to automatically resolve the issues in the application.  These same rules can also be executed within watsonx Code Assistant (see `Run auto-fixes` later in the lab).
+    This panel contains all the detailed information about this application. 
 
-![ama-req-code-changes](images/ama-req-code-changes.png)
+- Scroll down to the **Required code changes** section. Here, you will find the build configuration for executing OpenRewrite rules in a Maven or Gradle build. Since the application is marked as **Part-Automated**, some issues can be fixed automatically using these rules, while others require manual intervention. The same rewrite rules can also be applied within **watsonx Code Assistant**, which provides AI-assisted guidance for addressing the remaining issues (see **Modernizing the application to run on Enterprise Application Service for Java with watsonx Code Assistant** later in the lab).
 
-Scroll down to the **Issues** section to see what the automated code changes will resolve.
+    ![ama-req-code-changes](images/ama-req-code-changes.png)
 
-Open the technology issues accordion to see the 4 Critical issues. Expand them to review the help – but remember these can be resolved automatically by executing the configuration changes provided. [**NOTE** You will do this later in the lab using IBM watsonx code assistant].
+- Scroll down to the **Issues** section to review the required code changes for modernization.  
 
-![ama-issues-expanded](images/ama-issues-expanded.png)
+    Open the **Technology issues** accordion to view the **4 Critical issues**. Expand each issue to see detailed guidance. Note that three of these issues are marked with the automated-fix icon and can be resolved automatically by applying the provided configuration changes, while one requires manual intervention.
+
+    [**NOTE**: You will address these issues later in the lab using **IBM watsonx Code Assistant**.]
+
+    ![ama-issues-expanded](images/ama-issues-expanded.png)
+
+- After reviewing the details of the ModResorts application, it remains a good candidate for modernizing to the Cloud. Key reasons include:
+
+    - **Partially automated code changes**: Some required modifications can be handled automatically, reducing manual effort.
+
+    - **No external dependencies**: The application operates independently, simplifying the migration process.
 
 ### Generating the migration plan
 
-After reviewing all the details of the ModResorts application, it still appears to be a good candidate for modernizing to the Cloud. Key reasons include:  
-- Code changes can be partially automated.  
-- There are no dependencies associated with the application.
-
 To start the migration, click the **View migration plan** button at the top of the panel.
 
-The Migration plan page contains all of the details about what will be included in your migration bundle:
+- The Migration plan page contains all of the details about what will be included in your migration bundle:
 
-![ama-migration-panel](images/ama-migration-panel.png)
+    ![ama-migration-panel](images/ama-migration-panel.png)
 
-Click through and read the contents of each section (Note, some are placeholder instructions which are under development). 
+    Click through and read the contents of each section.
 
-At the right panel of the **IBM Enterprise Application Service** section you can see a preview of the files that are provided. Click on the `server.xml` file to get a preview:
+- At the right panel of the **IBM Enterprise Application Service** section you can see a preview of the files that are provided. Click on the `server.xml` file to get a preview:
 
-![ama-server-xml](images/ama-server-xml.png)
+    ![ama-server-xml](images/ama-server-xml.png)
 
-This is the starting configuration used to run the server and application locally during development and local testing.
+    This is the starting configuration used to run the server and application locally during development and local testing.
 
-At the top left side of the panel, click the **Dependency endpoints** button:
+- At the top left side of the panel, click the **Dependency endpoints** button:
 
-![ama-dependency-endpoints](images/ama-dependency-endpoints.png)
+    ![ama-dependency-endpoints](images/ama-dependency-endpoints.png)
 
-This panel shows all the dependencies that are part of this migration plan. If you do not want to modernize any of the dependencies, or if they are no longer relevant, you can remove them from the plan by deselecting them.
+    This panel shows all the dependencies that are part of this migration plan. If you do not want to modernize any of the dependencies, or if they are no longer relevant, you can remove them from the plan by deselecting them.
 
-For this lab, there are no dependencies associated with the application.  
+    For this lab, there are no dependencies associated with the application.  
 
-[Clicking the **Start in IBM Cloud** button creates a Cloud project, provisions service instances, and configures databases and message queues as outlined in the migration plan. From there you can customize the instances to suit your needs. However, this step will be skipped in this lab.]
+- Clicking the **Start in IBM Cloud** button creates a Cloud project, provisions service instances, and configures databases and message queues as outlined in the migration plan. From there you can customize the instances to suit your needs. However, this step will be skipped in this lab.
 
-At the top right side of the panel, click the **Download plan** button. This will result in a zip file being downloaded to your local system.
+- At the top right side of the panel, click the **Download plan** button. This will result in a zip file being downloaded to your local system.
 
-![ama-download-plan](images/ama-download-plan.png)
+    ![ama-download-plan](images/ama-download-plan.png)
 
-You can explode this zip file bundle to see all the artifacts that AMA provides, including a **README** file that gives you step by step instructions on how to use the bundle. You will use this bundle in the next section of the lab.
+    You can explode this zip file bundle to see all the artifacts that AMA provides, including a **README** file that gives you step by step instructions on how to use the bundle. You will use this bundle in the next section of the lab.
 
 ## Step 2: Modernizing the application to run on Enterprise Application Service for Java with watsonx Code Assistant
 
@@ -183,13 +193,17 @@ To access **watsonx Code Assistant for Enterprise Java Applications**, you need 
 
 - Once logged in, a greeting message will appear in the chat panel.
 
-   ![wca-vsc-chat-greeting-message](images/wca-vsc-chat-greeting-message.png)
+    <div align="center">
+    <img src="./images/wca-vsc-chat-greeting-message.png" width="500">
+    </div>
 
 ### Starting the modernization process
 
 - In the **Explorer** pane, right-click on either an empty area within the project folder or any file in the project. From the context menu,  select **watsonx Code Assistant** → **Modernize to Liberty**.
 
-  ![wca-vsc-modernize-to-liberty](images/wca-vsc-modernize-to-liberty.png)
+    <div align="center">
+      <img src="./images/wca-vsc-modernize-to-liberty.png" width="500">
+    </div>
 
 - The **Modernize to Liberty** interface will open.
 
@@ -208,8 +222,10 @@ The tool offers two methods for modernizing your application:
 In this lab, you will use the migration bundle option.
 
 - On the **Modernize ModResorts** page, click **Upload migration bundle**.
-  
-  ![wca-vsc-migration-bundle](images/wca-vsc-migration-bundle.png)
+
+    <div align="center">
+      <img src="./images/wca-vsc-migration-bundle.png" width="500">
+    </div>
 
 - Locate and select the `modresorts.ear_migrationBundle.zip` file from the `migration-bundle` folder in the project directory. The file path is [`sample-app-mod-v1\migration-bundle\modresorts.ear_migrationBundle.zip`](https://github.com/IBM/sample-app-mod/blob/main/migration-bundle/modresorts.ear_migrationBundle.zip).
 
@@ -226,7 +242,7 @@ Once the migration bundle is uploaded, watsonx Code Assistant for Enterprise Jav
 Review the extracted files, then check the selection box and click **Proceed** to add them to the project.
 
 <div align="center">
-  <img src="./images/wca-vsc-modernization-configuation-files.png" width="500">
+  <img src="./images/wca-vsc-modernization-configuation-files.png" width="400">
 </div>
 
 ### Reviewing and auto-fixing detected issues
