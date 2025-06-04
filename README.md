@@ -24,7 +24,7 @@ Enterprise Application Service has a built-in CI/CD workflow for delivering appl
 
 ### Launching Application Modernization Accelerator
 
-Launch Application Modernization Accelerator (AMA) using the url **https://10.100.1.10**:
+Launch Application Modernization Accelerator (AMA) using the url **http://10.100.1.10:3000/**:
 
 ![ama-home-page](images/ama-home-page.png)
 
